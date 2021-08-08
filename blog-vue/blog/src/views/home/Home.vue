@@ -5,7 +5,7 @@
       <div class="banner-container">
         <!-- 联系方式 -->
         <h1 class="blog-title animated zoomIn">
-          风丶宇的个人博客
+          刚丶的博客 <span style="font-size: 14px">记录学习每一天</span>
         </h1>
         <!-- 一言 -->
         <div class="blog-intro">
@@ -252,7 +252,7 @@ export default {
     },
     runTime() {
       var timeold =
-        new Date().getTime() - new Date("December 12,2019").getTime();
+        new Date().getTime() - new Date("July 5,2021").getTime();
       var msPerDay = 24 * 60 * 60 * 1000;
       var daysold = Math.floor(timeold / msPerDay);
       var str = "";
@@ -326,7 +326,7 @@ export default {
   left: 0;
   right: 0;
   height: 100vh;
-  background: url("https://www.static.talkxj.com/ymwmek.jpg") center center /
+  background: url(https://vdposter.bdstatic.com/f65681fd2c30c852e12e74072b53f72d.jpeg)center center /
     cover no-repeat;
   background-color: #49b1f5;
   background-attachment: fixed;

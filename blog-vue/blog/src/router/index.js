@@ -8,7 +8,7 @@ const routes = [
     path: "/",
     component: resolve => require(["../views/home/Home.vue"], resolve),
     meta: {
-      title: "风丶宇的个人博客"
+      title: "刚的博客"
     }
   },
   {

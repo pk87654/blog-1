@@ -1,0 +1,71 @@
+{
+  "groups": [
+    {
+      "name": "qq",
+      "type": "com.minzheng.blog.config.QQConfigProperties",
+      "sourceType": "com.minzheng.blog.config.QQConfigProperties"
+    },
+    {
+      "name": "weibo",
+      "type": "com.minzheng.blog.config.WeiboConfigProperties",
+      "sourceType": "com.minzheng.blog.config.WeiboConfigProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "qq.app-id",
+      "type": "java.lang.String",
+      "description": "QQ appId",
+      "sourceType": "com.minzheng.blog.config.QQConfigProperties"
+    },
+    {
+      "name": "qq.check-token-url",
+      "type": "java.lang.String",
+      "description": "校验token地址",
+      "sourceType": "com.minzheng.blog.config.QQConfigProperties"
+    },
+    {
+      "name": "qq.user-info-url",
+      "type": "java.lang.String",
+      "description": "QQ用户信息地址",
+      "sourceType": "com.minzheng.blog.config.QQConfigProperties"
+    },
+    {
+      "name": "weibo.access-token-url",
+      "type": "java.lang.String",
+      "description": "微博访问令牌地址",
+      "sourceType": "com.minzheng.blog.config.WeiboConfigProperties"
+    },
+    {
+      "name": "weibo.app-id",
+      "type": "java.lang.String",
+      "description": "微博appId",
+      "sourceType": "com.minzheng.blog.config.WeiboConfigProperties"
+    },
+    {
+      "name": "weibo.app-secret",
+      "type": "java.lang.String",
+      "description": "微博appSecret",
+      "sourceType": "com.minzheng.blog.config.WeiboConfigProperties"
+    },
+    {
+      "name": "weibo.grant-type",
+      "type": "java.lang.String",
+      "description": "微博登录类型",
+      "sourceType": "com.minzheng.blog.config.WeiboConfigProperties"
+    },
+    {
+      "name": "weibo.redirect-url",
+      "type": "java.lang.String",
+      "description": "微博回调域名",
+      "sourceType": "com.minzheng.blog.config.WeiboConfigProperties"
+    },
+    {
+      "name": "weibo.user-info-url",
+      "type": "java.lang.String",
+      "description": "微博用户信息地址",
+      "sourceType": "com.minzheng.blog.config.WeiboConfigProperties"
+    }
+  ],
+  "hints": []
+}

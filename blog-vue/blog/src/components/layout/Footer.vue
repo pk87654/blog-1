@@ -1,9 +1,9 @@
 <template>
   <v-footer app padless absolute v-if="!this.isMessage">
     <div class="footer-wrap">
-      <div>©2019 - {{ new Date().getFullYear() }} By 风丶宇</div>
+      <div>©2020 - {{ new Date().getFullYear() }} By 刚丶pk87654</div>
       <a href="https://beian.miit.gov.cn/" target="_blank">
-        湘ICP备19021924号
+        浙ICP备2021018905号
       </a>
     </div>
   </v-footer>
@@ -13,7 +13,7 @@
 export default {
   computed: {
     isMessage() {
-      return this.$route.path == "/message";
+      return this.$route.path === "/message";
     }
   }
 };
