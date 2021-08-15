@@ -1,3 +1,4 @@
+<!-- 分类 -->
 <template>
   <el-card class="main-card">
     <!-- 标题 -->
@@ -100,6 +101,17 @@ export default {
     };
   },
   methods: {
+    listResources() {
+
+    },
+    sizeChange(size) {
+      this.size = size;
+      this.listOnlineUsers();
+    },
+    currentChange(current) {
+      this.current = current;
+      this.listOnlineUsers();
+    },
     listOnlineUsers() {
       this.axios
         .get("/api/admin/users/online", {

@@ -178,6 +178,7 @@ export default {
   },
   data() {
     return {
+      form:{},
       loading: true,
       logList: [],
       logIdList: [],

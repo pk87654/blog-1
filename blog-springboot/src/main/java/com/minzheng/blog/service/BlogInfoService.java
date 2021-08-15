@@ -2,6 +2,7 @@ package com.minzheng.blog.service;
 
 import com.minzheng.blog.dto.BlogBackInfoDTO;
 import com.minzheng.blog.dto.BlogHomeInfoDTO;
+import com.minzheng.blog.entity.UserAbout;
 
 
 /**
@@ -33,13 +34,13 @@ public interface BlogInfoService  {
      * 修改关于我内容
      * @param aboutContent 关于我内容
      */
-    void updateAbout(String aboutContent);
+    void updateAbout(UserAbout aboutContent);
 
     /**
      * 修改公告
-     * @param notice 公告
+     * @param aboutContent 公告
      */
-    void updateNotice(String notice);
+    void updateNotice(UserAbout aboutContent);
 
     /**
      * 后台查看公告

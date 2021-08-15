@@ -6,6 +6,7 @@ import com.minzheng.blog.utils.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import static com.minzheng.blog.constant.CommonConst.IP;
 import static com.minzheng.blog.constant.RedisPrefixConst.BLOG_VIEWS_COUNT;
+import static com.minzheng.blog.constant.RedisPrefixConst.BLOG_VIEWS_COUNT_TEMP;
 import static com.minzheng.blog.constant.RedisPrefixConst.IP_SET;
 
 
@@ -36,7 +38,16 @@ public class ServletRequestListenerImpl implements ServletRequestListener {
         String ipAddr = IpUtil.getIpAddr(request);
         if (!ipAddr.equals(ip)) {
             session.setAttribute(IP, ipAddr);
-            redisService.incr(BLOG_VIEWS_COUNT, 1);
+            if (redisService.hasKey(BLOG_VIEWS_COUNT)) {
+                redisService.incr(BLOG_VIEWS_COUNT, 1);
+                redisService.set(BLOG_VIEWS_COUNT_TEMP,redisService.get(BLOG_VIEWS_COUNT));
+            } else {
+                if (redisService.hasKey(BLOG_VIEWS_COUNT_TEMP)) {
+                    redisService.set(BLOG_VIEWS_COUNT, redisService.get(BLOG_VIEWS_COUNT_TEMP));
+                } else {
+                    redisService.set(BLOG_VIEWS_COUNT,1);
+                }
+            }
         }
         // 将ip存入redis，统计每日用户量
         redisService.sAdd(IP_SET, ipAddr);

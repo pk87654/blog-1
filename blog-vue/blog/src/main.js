@@ -22,6 +22,17 @@ import Toast from "./components/toast/index";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
+// 代码高亮
+import hljs from "highlight.js"
+import "highlight.js/styles/googlecode.css" // 样式文件
+Vue.directive("highlight", function (el) {
+  let blocks = el.querySelectorAll('pre code')
+  blocks.forEach((block) => {
+    hljs.highlightBlock(block)
+  })
+});
+
+
 Vue.prototype.config = config;
 Vue.config.productionTip = false;
 Vue.use(animated);

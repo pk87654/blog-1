@@ -1,3 +1,4 @@
+<!-- 归档 -->
 <template>
   <div>
     <!-- banner -->
@@ -78,8 +79,8 @@ export default {
 
 <style scoped>
 .archive-banner {
-  background: url(https://www.static.talkxj.com/wallroom-1920x1080-bg-338d7bc.jpg)
-    center center / cover no-repeat;
+  /*https://www.static.talkxj.com/wallroom-1920x1080-bg-338d7bc.jpg*/
+  background: url("~@/assets/img/a1-1.jpg") center center / cover no-repeat;
   background-color: #49b1f5;
 }
 .time {

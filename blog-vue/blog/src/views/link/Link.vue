@@ -35,7 +35,7 @@
       <blockquote>
         <div>名称：刚的博客</div>
         <div>简介：念念不忘,必有回响</div>
-        <div>https://www.static.talkxj.com/avatar/blogger.jpg</div>
+        <div>https://gavinking.top/upload/2021/01/-3fa0e527a58c55c1-48ae33fad385482f94f2e6cb390cb4ae.jpg</div>
       </blockquote>
       <div class="mt-5 mb-5">
         需要交换友链的可在下方留言💖
@@ -101,7 +101,8 @@ blockquote {
   border-radius: 4px;
 }
 .link-banner {
-  background: url(https://www.static.talkxj.com/fdl.jpg) center center / cover
+  /*https://www.static.talkxj.com/fdl.jpg*/
+  background: url("~@/assets/img/a1-9.jpg") center center / cover
     no-repeat;
   background-color: #49b1f5;
 }

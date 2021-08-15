@@ -1,3 +1,4 @@
+<!-- 分类 -->
 <template>
   <div>
     <!-- banner -->
@@ -47,7 +48,7 @@ export default {
 
 <style scoped>
 .category-banner {
-  background: url(https://www.static.talkxj.com/wallhaven-13mk9v.jpg) center
+  background: url("~@/assets/img/a1-12.jpg") center
     center / cover no-repeat;
   background-color: #49b1f5;
 }

@@ -1,3 +1,4 @@
+<!-- 关于 -->
 <template>
   <el-card class="main-card">
     <div class="title">{{ this.$route.name }}</div>

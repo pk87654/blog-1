@@ -33,6 +33,8 @@ export default {
       this.axios.get("/api/about").then(({ data }) => {
         const MarkdownIt = require("markdown-it");
         const md = new MarkdownIt();
+        console.log(data);
+
         this.aboutContent = md.render(data.data);
       });
     }
@@ -47,7 +49,8 @@ export default {
 
 <style scoped>
 .about-banner {
-  background: url(https://www.static.talkxj.com/about.jpg) center center / cover
+  /*https://www.static.talkxj.com/about.jpg*/
+  background: url("~@/assets/img/a1-15.jpg") center center / cover
     no-repeat;
   background-color: #49b1f5;
 }

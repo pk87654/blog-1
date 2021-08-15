@@ -10,6 +10,7 @@ module.exports = {
         }
       }
     },
+    //https: true,
     disableHostCheck: true
   },
   productionSourceMap: false,

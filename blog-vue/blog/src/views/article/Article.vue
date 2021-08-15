@@ -1,3 +1,4 @@
+<!-- 每个文章页面 -->
 <template>
   <div>
     <!-- 封面图 -->
@@ -77,7 +78,7 @@
           <div class="aritcle-copyright">
             <div>
               <span>文章作者：</span>
-              <a href="http://www.talkxj.com" target="_blank"> 风丶宇</a>
+              <a href="http://www.imosubao.com" target="_blank"> 刚</a>
             </div>
             <div>
               <span>文章链接：</span>
@@ -324,7 +325,9 @@ export default {
           if (nodes.length) {
             for (let i = 0; i < nodes.length; i++) {
               let node = nodes[i];
+              //匹配规则
               let reg = /^H[1-4]{1}$/;
+              //如果匹配成功返回一个数组反之null
               if (reg.exec(node.tagName)) {
                 node.id = i;
               }
@@ -380,7 +383,7 @@ export default {
       this.axios.post("/api/articles/like", param).then(({ data }) => {
         if (data.flag) {
           //判断是否点赞
-          if (this.$store.state.articleLikeSet.indexOf(this.article.id) != -1) {
+          if (this.$store.state.articleLikeSet.indexOf(this.article.id) !== -1) {
             this.$set(this.article, "likeCount", this.article.likeCount - 1);
           } else {
             this.$set(this.article, "likeCount", this.article.likeCount + 1);
@@ -437,6 +440,7 @@ export default {
           }
         }
       });
+      //console.log(md.render(article.articleContent));
       // 将markdown替换为html标签
       article.articleContent = md.render(article.articleContent);
       this.article = article;

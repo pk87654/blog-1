@@ -39,8 +39,8 @@
           <span @click="openRegister">立即注册</span>
           <span @click="openForget" class="float-right">忘记密码?</span>
         </div>
-        <div class="social-login-title">社交账号登录</div>
-        <div class="social-login-wrapper">
+<!--        <div class="social-login-title">社交账号登录</div>-->
+<!--        <div class="social-login-wrapper">-->
           <!-- 微博登录 -->
 <!--          <a-->
 <!--            class="mr-3 iconfont iconweibo"-->
@@ -48,8 +48,8 @@
 <!--            @click="weiboLogin"-->
 <!--          />-->
           <!-- qq登录 -->
-          <a class="iconfont iconqq" style="color:#00AAEE" @click="qqLogin" />
-        </div>
+<!--          <a class="iconfont iconqq" style="color:#00AAEE" @click="qqLogin" />-->
+<!--        </div>-->
       </div>
     </v-card>
   </v-dialog>

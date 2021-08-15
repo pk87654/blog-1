@@ -1,19 +1,26 @@
 package com.minzheng.blog.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.minzheng.blog.constant.CommonConst;
 import com.minzheng.blog.dao.*;
 import com.minzheng.blog.dto.*;
 import com.minzheng.blog.entity.Article;
+import com.minzheng.blog.entity.UserAbout;
 import com.minzheng.blog.entity.UserInfo;
 import com.minzheng.blog.service.BlogInfoService;
 import com.minzheng.blog.service.RedisService;
 import com.minzheng.blog.service.UniqueViewService;
+import com.minzheng.blog.utils.cache.service.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.minzheng.blog.constant.CommonConst.FALSE;
@@ -40,11 +47,17 @@ public class BlogInfoServiceImpl implements BlogInfoService {
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private UserAboutMapper userAboutMapper;
+
+    @Autowired
+    private CacheService cacheService;
+
     @Override
     public BlogHomeInfoDTO getBlogInfo() {
         // 查询博主信息
         UserInfo userInfo = userInfoDao.selectOne(new LambdaQueryWrapper<UserInfo>()
-                .select(UserInfo::getAvatar, UserInfo::getNickname, UserInfo::getIntro)
+                //.select(UserInfo::getAvatar, UserInfo::getNickname, UserInfo::getIntro)
                 .eq(UserInfo::getId, CommonConst.BLOGGER_ID));
         // 查询文章数量
         Integer articleCount = articleDao.selectCount(new LambdaQueryWrapper<Article>()
@@ -55,10 +68,21 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         // 查询标签数量
         Integer tagCount = tagDao.selectCount(null);
         // 查询公告
-        Object value = redisService.get(NOTICE);
-        String notice = Objects.nonNull(value) ? value.toString() : "发布你的第一篇公告吧";
+        String value = getNotice();
+        //Object value = redisService.get(NOTICE);
+       // String notice = Objects.nonNull(value) ? value.toString() : "发布你的第一篇公告吧";
+        String notice = ObjectUtil.isNotEmpty(value) ? value : "发布你的第一篇公告吧";
+        Object viewsCount = "";
         // 查询访问量
-        String viewsCount = Objects.requireNonNull(redisService.get(BLOG_VIEWS_COUNT)).toString();
+        if (redisService.hasKey(BLOG_VIEWS_COUNT)) {
+             viewsCount = redisService.get(BLOG_VIEWS_COUNT);
+        } else {
+            if (redisService.hasKey(BLOG_VIEWS_COUNT_TEMP)) {
+                redisService.set(BLOG_VIEWS_COUNT, redisService.get(BLOG_VIEWS_COUNT_TEMP));
+            } else {
+                redisService.set(BLOG_VIEWS_COUNT,1);
+            }
+        }
         // 封装数据
         return BlogHomeInfoDTO.builder()
                 .nickname(userInfo.getNickname())
@@ -68,7 +92,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
                 .categoryCount(categoryCount)
                 .tagCount(tagCount)
                 .notice(notice)
-                .viewsCount(viewsCount)
+                .viewsCount(viewsCount.toString())
                 .build();
     }
 
@@ -130,26 +154,38 @@ public class BlogInfoServiceImpl implements BlogInfoService {
 
     @Override
     public String getAbout() {
-        Object value = redisService.get(ABOUT);
-        return Objects.nonNull(value) ? value.toString() : "";
+        UserAbout res = cacheService.getEntityCache(ABOUT, CommonConst.ABOUT_TIMEOUT, UserAbout.class, () -> userAboutMapper.selectById(1));
+        return ObjectUtil.isNotEmpty(res) ? res.getAboutContent() : "";
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void updateAbout(String aboutContent) {
-        redisService.set(ABOUT, aboutContent);
+    public void updateAbout(UserAbout userAbout) {
+        if (StringUtils.isNotBlank(userAbout.getId().toString())) {
+            cacheService.clearCache(ABOUT);
+            userAboutMapper.updateById(userAbout);
+        } else {
+            userAboutMapper.insert(userAbout);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void updateNotice(String notice) {
-        redisService.set(NOTICE, notice);
+    public void updateNotice(UserAbout userAbout) {
+        if (StringUtils.isNotBlank(userAbout.getId().toString())) {
+            cacheService.clearCache(NOTICE);
+            userAboutMapper.updateById(userAbout);
+        } else {
+            userAboutMapper.insert(userAbout);
+        }
+        //redisService.set(NOTICE, notice);
     }
 
     @Override
     public String getNotice() {
-        Object value = redisService.get(NOTICE);
-        return Objects.nonNull(value) ? value.toString() : "发布你的第一篇公告吧";
+         UserAbout res = cacheService.getEntityCache(NOTICE, CommonConst.ABOUT_TIMEOUT, UserAbout.class, () -> userAboutMapper.selectById(2));
+       // Object value = redisService.get(NOTICE);
+        return ObjectUtil.isNotEmpty(res) ? res.getAboutContent() : "发布你的第一篇公告吧";
     }
 
 }

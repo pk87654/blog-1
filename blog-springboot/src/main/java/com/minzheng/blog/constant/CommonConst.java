@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 /**
  * 公共常量
  *
- * @author: yezhiqiu
- * @date: 2021-01-29
  **/
 public class CommonConst {
 
@@ -24,6 +22,11 @@ public class CommonConst {
      * 博主id
      */
     public static final int BLOGGER_ID = 1;
+
+    /**
+     * 介绍保存时间
+     */
+    public static final Long ABOUT_TIMEOUT = 6000000L;
 
     /**
      * 默认用户昵称
@@ -48,7 +51,7 @@ public class CommonConst {
     /**
      * 网站域名
      */
-    public static final String URL = "https://www.talkxj.com";
+    public static final String URL = "https://www.imosubao.com";
 
     /**
      * 用户ip

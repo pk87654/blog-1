@@ -4,13 +4,15 @@ server:
   servlet:
     session:
       timeout: 21600
+  max-http-header-size: 10240
 
 #配置mysql数据库
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://101.34.126.25:3306/blog?serverTimezone=GMT%2B8&allowMultiQueries=true
+    url: jdbc:mysql://172.17.0.13:3306/blog?serverTimezone=GMT%2B8&allowMultiQueries=true
+    #url: jdbc:mysql://101.34.126.25:3306/blog?serverTimezone=GMT%2B8&allowMultiQueries=true
     username: root
     password: pg123456
     hikari:
@@ -30,12 +32,14 @@ spring:
       connection-test-query: SELECT 1
   #redis配置
   redis:
-    host: 101.34.126.25
+    host: 172.17.0.13
+    #host: 101.34.126.25
     port: 6379
     password:
   #mq配置
   rabbitmq:
-    host: 101.34.126.25
+    host: 172.17.0.13
+    #host: 101.34.126.25
     port: 5672
     username: guest
     password: guest
@@ -60,14 +64,15 @@ spring:
 
 #es配置
 elasticsearch:
-  host: 101.34.126.25
+  host: 172.17.0.13
+  #host: 101.34.126.25
   port: 9200
 
 #配置MybatisPlus
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
 
 #第三方配置信息

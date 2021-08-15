@@ -3,6 +3,7 @@ package com.minzheng.blog.controller;
 
 import com.minzheng.blog.annotation.OptLog;
 import com.minzheng.blog.dto.BlogHomeInfoDTO;
+import com.minzheng.blog.entity.UserAbout;
 import com.minzheng.blog.service.BlogInfoService;
 import com.minzheng.blog.service.impl.WebSocketServiceImpl;
 import com.minzheng.blog.vo.Result;
@@ -45,6 +46,7 @@ public class BlogInfoController {
 
     @ApiOperation(value = "查看关于我信息")
     @GetMapping("/about")
+    @ResponseBody
     public Result<String> getAbout() {
         return new Result(true, StatusConst.OK, "查询成功", blogInfoService.getAbout());
     }
@@ -53,7 +55,8 @@ public class BlogInfoController {
     @ApiOperation(value = "修改关于我信息")
     @PutMapping("/admin/about")
     public Result<?> updateAbout(String aboutContent) {
-        blogInfoService.updateAbout(aboutContent);
+        UserAbout userAbout = UserAbout.builder().id(1).userAbout("about").aboutContent(aboutContent).build();
+        blogInfoService.updateAbout(userAbout);
         return new Result<>(true, StatusConst.OK, "修改成功");
     }
 
@@ -61,7 +64,8 @@ public class BlogInfoController {
     @ApiOperation(value = "修改公告")
     @PutMapping("/admin/notice")
     public Result<?> updateNotice(String notice) {
-        blogInfoService.updateNotice(notice);
+        UserAbout userAbout = UserAbout.builder().id(2).aboutContent(notice).build();
+        blogInfoService.updateNotice(userAbout);
         return new Result<>(true, StatusConst.OK, "修改成功");
     }
 
@@ -74,6 +78,7 @@ public class BlogInfoController {
     }
 
     @ApiOperation(value = "查看公告")
+    @ResponseBody
     @GetMapping("/admin/notice")
     public Result<String> getNotice() {
         return new Result(true, StatusConst.OK, "查看成功", blogInfoService.getNotice());

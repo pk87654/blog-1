@@ -24,6 +24,11 @@ public class RedisPrefixConst {
     public static final String BLOG_VIEWS_COUNT = "blog_views_count";
 
     /**
+     * 博客浏览量
+     */
+    public static final String BLOG_VIEWS_COUNT_TEMP = "blog_views_count_temp";
+
+    /**
      * 文章浏览量
      */
     public static final String ARTICLE_VIEWS_COUNT = "article_views_count";
@@ -51,12 +56,12 @@ public class RedisPrefixConst {
     /**
      * 关于我信息
      */
-    public static final String ABOUT = "about";
+    public static final String ABOUT = "about::1";
 
     /**
      * 公告
      */
-    public static final String NOTICE = "notice";
+    public static final String NOTICE = "notice::2";
 
     /**
      * ip集合
