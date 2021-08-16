@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
  * @author 11921
  */
 @MapperScan("com.minzheng.blog.dao")
+//@ComponentScan(value = "com.minzheng.blog.receiver")
 @SpringBootApplication
 @EnableScheduling
 public class BlogApplication {

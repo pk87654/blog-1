@@ -75,6 +75,7 @@ export default {
   watch: {
     keywords(value) {
       this.flag = value.trim() != "" ? true : false;
+      console.log(value);
       this.axios
         .get("/api/articles/search", {
           params: { current: 1, keywords: value }

@@ -1,5 +1,7 @@
 package com.minzheng.blog.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -21,6 +23,9 @@ import com.minzheng.blog.vo.DeleteVO;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -36,6 +41,7 @@ import java.util.stream.Collectors;
 
 import static com.minzheng.blog.constant.CommonConst.ARTICLE_SET;
 import static com.minzheng.blog.constant.CommonConst.FALSE;
+import static com.minzheng.blog.constant.MQPrefixConst.MAXWELL_EXCHANGE;
 import static com.minzheng.blog.constant.RedisPrefixConst.*;
 
 /**
@@ -62,6 +68,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
     private ArticleService articleService;
     @Autowired
     private ArticleTagService articleTagService;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public PageDTO<ArchiveDTO> listArchives(Long current) {
@@ -257,6 +266,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
                 .isDraft(articleVO.getIsDraft())
                 .build();
         articleService.saveOrUpdate(article);
+
+        //更新到Search
+        Map<String, Object> map = new HashMap<>();
+        map.put("data", article);
+        map.put("type","update");
+        rabbitTemplate.convertAndSend(MAXWELL_EXCHANGE, "*", new Message(JSON.toJSONBytes(map), new MessageProperties()));
+
+
         // 编辑文章则删除文章所有标签
         if (Objects.nonNull(articleVO.getId()) && articleVO.getIsDraft().equals(FALSE)) {
             articleTagDao.delete(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getArticleId, articleVO.getId()));
@@ -294,6 +311,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
                 .build())
                 .collect(Collectors.toList());
         articleService.updateBatchById(articleList);
+
+        // 修改isDelete的值文章
+        articleList.forEach(item->{
+            Article article = articleService.getById(item.getId());
+            article.setIsDelete(item.getIsDelete());
+            Map<String, Object> map = new HashMap<>();
+            map.put("data", article);
+            //如果是0表示可以更新
+            map.put("type", "update");
+            rabbitTemplate.convertAndSend(MAXWELL_EXCHANGE, "*", new Message(JSON.toJSONBytes(map), new MessageProperties()));
+        });
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -301,8 +329,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
     public void deleteArticles(List<Integer> articleIdList) {
         // 删除文章标签关联
         articleTagDao.delete(new LambdaQueryWrapper<ArticleTag>().in(ArticleTag::getArticleId, articleIdList));
-        // 删除文章
         articleDao.deleteBatchIds(articleIdList);
+        articleIdList.forEach(it->{
+            Article article = Article.builder().id(it).isDraft(FALSE).build();
+            Map<String, Object> map = new HashMap<>();
+            map.put("data", article);
+            map.put("type", "delete");
+            rabbitTemplate.convertAndSend(MAXWELL_EXCHANGE, "*", new Message(JSON.toJSONBytes(map), new MessageProperties()));
+        });
     }
 
     @Override
@@ -345,7 +379,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         // 根据关键词搜索文章标题或内容
-        if (Objects.nonNull(condition.getKeywords())) {
+        if (StrUtil.isNotBlank(condition.getKeywords())) {
             boolQueryBuilder.must(QueryBuilders.boolQuery().should(QueryBuilders.matchQuery("articleTitle", condition.getKeywords()))
                     .should(QueryBuilders.matchQuery("articleContent", condition.getKeywords())))
                     .must(QueryBuilders.termQuery("isDelete", FALSE));
